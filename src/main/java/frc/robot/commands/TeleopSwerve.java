@@ -2,10 +2,10 @@ package frc.robot.commands;
 
 import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Ultrasonic;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-
 
 public class TeleopSwerve extends CommandBase {
 
@@ -15,6 +15,7 @@ public class TeleopSwerve extends CommandBase {
     private boolean openLoop;
     
     private Swerve s_Swerve;
+    private Ultrasonic ultrasonic;
     private Joystick controller;
     private int translationAxis;
     private int strafeAxis;
@@ -23,7 +24,7 @@ public class TeleopSwerve extends CommandBase {
     /**
      * Driver control
      */
-    public TeleopSwerve(Swerve s_Swerve, Joystick controller, int translationAxis, int strafeAxis, int rotationAxis, boolean fieldRelative, boolean openLoop) {
+    public TeleopSwerve(Swerve s_Swerve, Ultrasonic ultrasonic, Joystick controller, int translationAxis, int strafeAxis, int rotationAxis, boolean fieldRelative, boolean openLoop) {
         this.s_Swerve = s_Swerve;
         addRequirements(s_Swerve);
 
@@ -33,6 +34,7 @@ public class TeleopSwerve extends CommandBase {
         this.rotationAxis = rotationAxis;
         this.fieldRelative = fieldRelative;
         this.openLoop = openLoop;
+        this.ultrasonic = ultrasonic;
     }
 
     @Override
@@ -49,5 +51,8 @@ public class TeleopSwerve extends CommandBase {
         translation = new Translation2d(yAxis, xAxis).times(Constants.Swerve.maxSpeed);
         rotation = rAxis * Constants.Swerve.maxAngularVelocity;
         s_Swerve.drive(translation, rotation, fieldRelative, openLoop);
+        
+        // Print out ultrasonic value
+        System.out.println(ultrasonic.getDistanceValue());
     }
 }
